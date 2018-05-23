@@ -1,0 +1,31 @@
+{
+  "name": "chatweb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eloim-zubkov/chatWeb.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eloim-zubkov/chatWeb/issues"
+  },
+  "homepage": "https://github.com/eloim-zubkov/chatWeb#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "grommet": "^1.10.1",
+    "mongodb": "^3.1.0-beta4",
+    "mongodbext": "^2.2.4",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-redux": "^5.0.7",
+    "underscore": "^1.9.0",
+    "ws": "^5.2.0"
+  }
+}
