@@ -1,28 +1,57 @@
-const webSocket = require('ws');
 const express = require('express');
-const https = require('http');
+const http = require('http');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const serveStatic = require('serve-static');
 const logger = require('./utils/logger');
+const config = require('./config')();
+const _ = require('underscore');
 
-const clients = {};
-
-const wsServer = new webSocket.Server({
-	port: config.port
-});
-
-wsServer.on('connection', (ws) => {
-	
-})
-
-function init() {
+async function init() {
 	const app = express();
 
-	app.use('/uploads', serveStatic(config.path.uploads));
+	const server = http.Server(app);
+
+	require('./utils/express/async')(app);
+
+	app.set('views', './views');
+	app.set('view engine', 'pug');
+	app.locals = require('./views/helpers');
 
 	app.use(bodyParser.json());
 
+	app.use(cookieParser('1ea87c9bd1ef415eaf11599cce75836f', {
+		path: '/',
+		httpOnly: true,
+		maxAge: null
+	}));
+
 	app.use('/static', serveStatic('./static'));
+	await require('./db').init();
+	require('./routes')(app);
 
-	app.listen(config.listen.port, config.listen.host);
-
+	server.listen(config.listen.port);
+	require('./socket')(server);
 	logger(`Server started on ${config.listen.host}:${config.listen.port}`);
+
+	app.use((err, req, res, next) => {
+		logger(err);
+
+		if (res.headersSent) {
+			return next(err);
+		}
+
+		res.status(err.statusCode || 500).json(
+			_(err).pick('name', 'message', 'userMessage')
+		);
+	});
+}
+
+if (module.parent) {
+	module.exports = init;
+} else {
+	init().catch((err) => {
+		logger(err);
+		process.exit(1);
+	});
 }

@@ -3,7 +3,7 @@ const {MongoClient} = require('mongodb');
 const config = require('../config')();
 
 const collections = [
-	'messages'
+	'rooms'
 ];
 
 let initialized = false;
