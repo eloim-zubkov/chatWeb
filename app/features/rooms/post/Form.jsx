@@ -53,12 +53,6 @@ Room.propTypes = {
 };
 
 module.exports = withFormik({
-	mapPropsToValues: ({post}) => ({
-		_id: post && post._id,
-		text: post ? post.text : '',
-		image: post && post.image
-	}),
-
 	validationSchema: yup.object().shape({
 		roomName: yup
 			.string()

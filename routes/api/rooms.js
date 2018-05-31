@@ -45,7 +45,7 @@ module.exports = function(app) {
 
 			db.rooms.count(condition)
 		]);
-		console.log({rooms, total});
+
 		res.json({rooms, total});
 	});
 

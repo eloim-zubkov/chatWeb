@@ -18,7 +18,7 @@ module.exports = class Rooms extends React.Component {
 	}
 
 	onMore = () => {
-		this.addPosts({offset: this.state.rooms.length});
+		this.addRooms({offset: this.state.rooms.length});
 	}
 
 	getRooms(...args) {
@@ -30,7 +30,7 @@ module.exports = class Rooms extends React.Component {
 		});
 	}
 
-	addPosts(...args) {
+	addRooms(...args) {
 		if (this.state.isSubmiting) {
 			return;
 		}
@@ -55,8 +55,10 @@ module.exports = class Rooms extends React.Component {
 				<h3>Загрузка...</h3>
 			);
 		}
+		console.log(this.state.rooms);
+
 		const roomsElements = _(this.state.rooms).map((room) => (
-			<ListItem key={post._id} justify="center" separator="none">
+			<ListItem key={room._id} justify="center" separator="none">
 				<Room
 					room={room}
 				/>

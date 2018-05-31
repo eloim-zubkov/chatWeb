@@ -10,11 +10,11 @@ function Room({room}) {
 			size="large"
 		>
 			<Box align="center">
-				<Label>{post.text}</Label>
+				<Label>{room.name}</Label>
 			</Box>
 			<Box
 				direction="row"
-				justify="between"
+				justify="center"
 			>
 				<Button
 					icon={<EditIcon />}
