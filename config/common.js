@@ -6,10 +6,6 @@ const {configBuilder} = require('./index');
 configBuilder.register({
 	name: 'common',
 	config: {
-		listen: {
-			host: '127.0.0.1',
-			port: 3000
-		},
 		mongodb: {
 			url: (config) => mongodbUri.format({
 				database: config.mongodb.database,

@@ -3,6 +3,7 @@ const {
 	Header, Box, Button, AddIcon, Anchor, Heading, Article
 } = require('grommet');
 const PropTypes = require('prop-types');
+const {withRouter} = require('react-router');
 
 function Layout({children}) {
 	return (
@@ -45,4 +46,4 @@ Layout.propTypes = {
 	children: PropTypes.element.isRequired
 };
 
-module.exports = Layout;
+module.exports = withRouter(Layout);

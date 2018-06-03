@@ -4,7 +4,7 @@ const db = require('../db');
 module.exports = function(app) {
 	const io = require('socket.io')(app);
 
-	io.on('connection', function(socket) {
+	io.on('connection', (socket) => {
 		socket.on('init', async (username, room, password) => {
 				room = parseInt(room, 10);
 

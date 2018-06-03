@@ -46,7 +46,6 @@ function Room({
 Room.propTypes = {
 	isSubmitting: PropTypes.bool.isRequired,
 	handleSubmit: PropTypes.func.isRequired,
-	values: PropTypes.any.isRequired,
 	handleChange: PropTypes.func.isRequired,
 	setFieldValue: PropTypes.func.isRequired,
 	errors: PropTypes.any.isRequired
@@ -66,8 +65,10 @@ module.exports = withFormik({
 	}),
 
 	handleSubmit: ({roomName, password}, {props, setSubmitting}) => {
-		axios.post(`/api/rooms`, {name: roomName, password}).then((res) => {
-			props.router.push(`/${res.room._id}`);
+		console.log(props);
+
+		axios.post(`/api/rooms`, {name: roomName, password}).then(() => {
+			props.router.push(`/`);
 		}).catch(() => {
 			setSubmitting(false);
 		});

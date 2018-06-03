@@ -1,5 +1,5 @@
 const React = require('react');
-const {Image, Box, Label, Button, EditIcon, CloseIcon} = require('grommet');
+const {Image, Box, Label, Button, AddIcon} = require('grommet');
 const PropTypes = require('prop-types');
 
 function Room({room}) {
@@ -17,7 +17,7 @@ function Room({room}) {
 				justify="center"
 			>
 				<Button
-					icon={<EditIcon />}
+					icon={<AddIcon />}
 					label="Присоединиться"
 					path={`/${room._id}`}
 				/>

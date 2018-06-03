@@ -55,7 +55,6 @@ module.exports = class Rooms extends React.Component {
 				<h3>Загрузка...</h3>
 			);
 		}
-		console.log(this.state.rooms);
 
 		const roomsElements = _(this.state.rooms).map((room) => (
 			<ListItem key={room._id} justify="center" separator="none">

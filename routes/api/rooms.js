@@ -38,7 +38,7 @@ module.exports = function(app) {
 		const condition = makeGetListCondition(params);
 
 		const [rooms, total] = await Promise.all([db.rooms
-			.find(condition, {_id: 1, name: 1})
+			.find(condition, {_id: 1, name: 1, isPassword: 1})
 			.limit(params.limit)
 			.skip(params.offset)
 			.toArray(),
@@ -47,6 +47,30 @@ module.exports = function(app) {
 		]);
 
 		res.json({rooms, total});
+	});
+
+	app.get('/api/rooms/:_id', async (req, res) => {
+		const params = validate(req, {
+			_id: {
+				required: true,
+				type: 'number',
+				minimum: 0
+			}
+		});
+
+		if (req.signedCookies.name) {
+			const room = await db.rooms.findOne(
+				{_id: params._id},
+				{
+					name: 1,
+					isPassword: 1,
+					_id: 1
+				});
+
+			res.json({...room});
+		} else {
+			res.redirect('/signin');
+		}
 	});
 
 	app.post('/api/rooms', async (req, res) => {
@@ -67,7 +91,7 @@ module.exports = function(app) {
 		if (room) {
 			throw new Error('Комната с таким именем уже существует');
 		}
-
+		params.isPassword = params.password !== undefined;
 		params.updateDate = moment().unix();
 
 		await db.rooms.insertOne(params);
