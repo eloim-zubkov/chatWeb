@@ -39,8 +39,7 @@ module.exports = (app) => {
 
 		if (req.signedCookies.name) {
 			const room = await db.rooms.findOne({_id: params._id});
-			console.log(room);
-			
+
 			res.render('chat', {room});
 		} else {
 			res.redirect('/login');

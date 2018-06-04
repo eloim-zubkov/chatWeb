@@ -24,6 +24,6 @@ module.exports = (app) => {
 		validate(req, {});
 
 		res.clearCookie('name');
-		res.sendStatus(200);
+		res.send(200);
 	});
 };

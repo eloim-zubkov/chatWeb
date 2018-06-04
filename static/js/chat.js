@@ -3,32 +3,35 @@ $(document).ready(function() {
 		show: true
 	});
 
-	$('#enter').click(function() {
+	$('#enter').click(() => {
 		$('#modal').modal('hide');
 		init($('#password').val());
 	});
 
-	if(!$.find('#modal').length) {
+	if(!$.find('#modal').length && $('#messages').data('id')) {
 		init();
 	}
 });
 
-function init(password) {
+function init(password = '') {
 	$.ajax({
 		type: 'GET',
 		url: '/api/name',
 		success: (username) => {
-			let socket = io();
+			const socket = io();
 
-			socket.emit('init', username, $('#messages').data('id'), password);
+			const room = $('#messages').data('id');
+			socket.emit('init', username, room, password);
 
-			socket.on('message', function (username, message) {
+			socket.on('newMessage', (username, message) => {
+				console.log('получил');
+
 				addMessage(message, username);
 			});
 
-			$('form').submit(function() {
+			$('#chatForm').submit(() => {
 				const message = $('.message').val();
-				socket.emit('message', message);
+				socket.emit('message', message, username, room);
 				$('.message').val('');
 				addMessage(message, username, 1);
 				return false;

@@ -3,7 +3,7 @@ extends layout
 block body
 	.container
 		.container#messages(data-id=room._id)
-		form
+		form#chatForm
 			.form-group
 				input.form-control.message(placeholder="Сообщение...")
 			button.btn.btn-primary.pull-right.send-message(type="submit", style="margin-left: 10px;") Отправить
