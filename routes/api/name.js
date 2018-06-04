@@ -20,7 +20,7 @@ module.exports = (app) => {
 		res.send(req.signedCookies.name);
 	});
 
-	app['delete']('/api/name', (req, res) => {
+	app.delete('/api/name', (req, res) => {
 		validate(req, {});
 
 		res.clearCookie('name');

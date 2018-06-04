@@ -1,9 +1,16 @@
-doctype html
-html
-	- let headTitle
-	block params
-	head
-		meta(name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no")
-	body
-		#cabinet
-		script(type="text/javascript" src="/static/scripts/bundle.js")
+extends layout
+
+block params
+	-headTitle='Вход'
+
+block body
+	.container.col-md-8.offset-md-2.text-center
+		form#loginForm
+			.form-group.mt-3
+				input#usr.form-control(
+					type="text"
+					minlength="3"
+					required
+					placeholder="Ник"
+				)
+			button.btn.btn-success(type="submit") Продолжить

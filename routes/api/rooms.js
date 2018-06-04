@@ -1,8 +1,6 @@
 const _ = require('underscore');
-const moment = require('moment');
 const validate = require('../../utils/validate');
 const db = require('../../db');
-const error = require('../../utils/errors.js');
 
 module.exports = function(app) {
 	function makeGetListCondition(params) {
@@ -24,7 +22,7 @@ module.exports = function(app) {
 			},
 			limit: {
 				type: 'number',
-				'default' : 20,
+				'default': 20,
 				minimum: 1,
 				maximum: 100
 			},
@@ -37,12 +35,12 @@ module.exports = function(app) {
 
 		const condition = makeGetListCondition(params);
 
-		const [rooms, total] = await Promise.all([db.rooms
-			.find(condition, {_id: 1, name: 1, isPassword: 1})
-			.limit(params.limit)
-			.skip(params.offset)
-			.toArray(),
-
+		const [rooms, total] = await Promise.all([
+			db.rooms
+				.find(condition, {_id: 1, name: 1})
+				.limit(params.limit)
+				.skip(params.offset)
+				.toArray(),
 			db.rooms.count(condition)
 		]);
 
@@ -63,7 +61,6 @@ module.exports = function(app) {
 				{_id: params._id},
 				{
 					name: 1,
-					isPassword: 1,
 					_id: 1
 				});
 
@@ -86,15 +83,13 @@ module.exports = function(app) {
 			}
 		});
 
-		const room = await db.rooms.findOne({name: params.name});
+		const roomDb = await db.rooms.findOne({name: params.name});
 
-		if (room) {
+		if (roomDb) {
 			throw new Error('Комната с таким именем уже существует');
 		}
-		params.isPassword = params.password !== undefined;
-		params.updateDate = moment().unix();
 
-		await db.rooms.insertOne(params);
+		const room = await db.rooms.insertOne(params);
 
 		res.json({room: _(room).pick('_id', 'name')});
 	});

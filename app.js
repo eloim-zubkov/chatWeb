@@ -1,11 +1,11 @@
 const express = require('express');
-const http = require('http');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const serveStatic = require('serve-static');
-const logger = require('./utils/logger');
-const config = require('./config')();
 const _ = require('underscore');
+const serveStatic = require('serve-static');
+const cookieParser = require('cookie-parser');
+const http = require('http');
+const config = require('./config')();
+const logger = require('./utils/logger.js');
 
 async function init() {
 	const app = express();

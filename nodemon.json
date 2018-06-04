@@ -1,9 +1,0 @@
-{
-  "ignoreRoot": [
-    ".git",
-    "test"
-  ],
-  "ignore": [],
-  "ext": "js,pug,json",
-  "watch": "./"
-}

@@ -1,0 +1,22 @@
+extends layout
+
+block params
+	-headTitle = Комнаты
+block body
+	.container.pt-2
+		each room in rooms
+			.card.mb-3
+				.card-body
+					a(href="chats/" + room._id, title=room.name) #{room.name}
+	.container.col-md-4.offset-md-0
+		form#roomForm
+			.form-group
+				label Название
+				| 
+				input#name.form-control(name="name", type="text", placeholder="Название комнаты", minlength="3", required)
+				| 
+			.form-group
+				label Пароль
+				| 
+				input#password.form-control(name="password", type="password", placeholder="Пароль", minlength="6")
+			button.btn.btn-primary.pull-right(type="submit") Создать новую комнату
