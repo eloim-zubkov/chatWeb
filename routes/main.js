@@ -1,14 +1,13 @@
-const db = require('../db');
-const validate = require('../utils/validate');
+const ensureSignedIn = require('../middlewares/ensureLoggedIn');
 
 module.exports = function(app) {
 	app.get('/signin', (req, res) => {
-		res.render('cabinet');
+		res.render('app');
 	});
 
-	app.get('*', (req, res) => {
+	app.get('*', ensureSignedIn, (req, res) => {
 		if (req.signedCookies.name) {
-			res.render('cabinet');
+			res.render('app');
 		} else {
 			res.redirect('/signin');
 		}

@@ -9,16 +9,17 @@ class NotFoundError extends Error {
 	}
 }
 
-class ForbiddenAttachmentType extends Error {
+class AccessDeniedError extends Error {
 	constructor(...args) {
 		super(...args);
 
-		this.name = 'ForbiddenAttachmentType';
-		this.message = 'The file type of the attachment isn’t allowed.';
-		this.userMessage = 'Тип файла не разрешен';
-		this.statusCode = 500;
+		this.name = 'AccessDeniedError';
+		this.message = 'You have no access';
+		this.userMessage = 'Доступ запрещен';
+		this.statusCode = 403;
 	}
 }
+
 exports.NotFoundError = NotFoundError;
 
-exports.ForbiddenAttachmentType = ForbiddenAttachmentType;
+exports.AccessDeniedError = AccessDeniedError;

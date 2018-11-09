@@ -2,8 +2,6 @@ const validate = require('../../utils/validate');
 
 module.exports = (app) => {
 	app.get('/api/name', (req, res) => {
-		validate(req, {});
-
 		res.status(200).send(req.signedCookies.name);
 	});
 
@@ -20,9 +18,7 @@ module.exports = (app) => {
 		res.send(req.signedCookies.name);
 	});
 
-	app['delete']('/api/name', (req, res) => {
-		validate(req, {});
-
+	app.delete('/api/name', checkLoggedIn, (req, res) => {
 		res.clearCookie('name');
 		res.sendStatus(200);
 	});

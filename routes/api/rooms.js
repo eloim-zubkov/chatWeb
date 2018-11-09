@@ -2,7 +2,7 @@ const _ = require('underscore');
 const moment = require('moment');
 const validate = require('../../utils/validate');
 const db = require('../../db');
-const error = require('../../utils/errors.js');
+const checkLoggedIn = require('../../middlewares/checkLoggedIn');
 
 module.exports = function(app) {
 	function makeGetListCondition(params) {
@@ -15,7 +15,7 @@ module.exports = function(app) {
 		return condition;
 	}
 
-	app.get('/api/rooms', async (req, res) => {
+	app.get('/api/rooms', checkLoggedIn, async (req, res) => {
 		const params = validate(req, {
 			offset: {
 				type: 'number',
@@ -49,7 +49,11 @@ module.exports = function(app) {
 		res.json({rooms, total});
 	});
 
-	app.get('/api/rooms/:_id', async (req, res) => {
+	app.get('/api/rooms/:_id', checkLoggedIn, async (req, res) => {
+		if (!req.signedCookies.name) {
+			res.status(404);
+		}
+
 		const params = validate(req, {
 			_id: {
 				required: true,
@@ -58,22 +62,18 @@ module.exports = function(app) {
 			}
 		});
 
-		if (req.signedCookies.name) {
-			const room = await db.rooms.findOne(
-				{_id: params._id},
-				{
-					name: 1,
-					isPassword: 1,
-					_id: 1
-				});
+		const room = await db.rooms.findOne(
+			{_id: params._id},
+			{
+				name: 1,
+				isPassword: 1,
+				_id: 1
+			});
 
-			res.json({...room});
-		} else {
-			res.redirect('/signin');
-		}
+		res.json({...room});
 	});
 
-	app.post('/api/rooms', async (req, res) => {
+	app.post('/api/rooms', checkLoggedIn, async (req, res) => {
 		const params = validate(req, {
 			name: {
 				type: 'string',
@@ -91,6 +91,7 @@ module.exports = function(app) {
 		if (room) {
 			throw new Error('Комната с таким именем уже существует');
 		}
+
 		params.isPassword = params.password !== undefined;
 		params.updateDate = moment().unix();
 
