@@ -6,9 +6,7 @@ const _ = require('underscore');
 const yup = require('yup');
 const PropTypes = require('prop-types');
 
-function Room({
-	errors, isSubmitting, handleChange, handleSubmit, values
-}) {
+function Room({errors, isSubmitting, handleChange, handleSubmit}) {
 	return (
 		<Box align="center">
 			<Form onSubmit={handleSubmit}>
@@ -65,8 +63,6 @@ module.exports = withFormik({
 	}),
 
 	handleSubmit: ({roomName, password}, {props, setSubmitting}) => {
-		console.log(props);
-
 		axios.post(`/api/rooms`, {name: roomName, password}).then(() => {
 			props.router.push(`/`);
 		}).catch(() => {

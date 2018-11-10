@@ -12,5 +12,5 @@ render(
 			{routes}
 		</Router>
 	</App>,
-	document.getElementById('cabinet')
+	document.getElementById('app')
 );

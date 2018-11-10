@@ -2,32 +2,34 @@ const React = require('react');
 const _ = require('underscore');
 const axios = require('axios');
 const {withFormik} = require('formik');
-const {Box, Button, Form, FormField, TextInput} = require('grommet');
+const {Box, Button, Form, FormField, Layer, TextInput} = require('grommet');
 const yup = require('yup');
 const PropTypes = require('prop-types');
 
 function Signin({handleChange, handleSubmit, isSubmitting, errors}) {
 	return (
-		<Box align="center">
-			<Form onSubmit={handleSubmit}>
-				<FormField label="Ваш ник" error={errors.text}>
-					<TextInput
-						name="name"
-						onDOMChange={handleChange}
-					/>
-				</FormField>
-				<Box
-					direction="row"
-					justify="between"
-					margin={{top: 'small'}}
-				>
-					<Button
-						label="Отправить"
-						type={isSubmitting ? 'button' : 'submit'}
-					/>
-				</Box>
-			</Form>
-		</Box>
+		<Layer >
+			<Box align="center">
+				<Form onSubmit={handleSubmit}>
+					<FormField label="Ваш ник" error={errors.text}>
+						<TextInput
+							name="name"
+							onDOMChange={handleChange}
+						/>
+					</FormField>
+					<Box
+						direction="row"
+						justify="between"
+						margin={{top: 'small'}}
+					>
+						<Button
+							label="Отправить"
+							type={isSubmitting ? 'button' : 'submit'}
+						/>
+					</Box>
+				</Form>
+			</Box>
+		</Layer>
 	);
 }
 

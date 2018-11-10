@@ -1,7 +1,8 @@
 {
   "ignoreRoot": [
     ".git",
-    "test"
+    "test",
+    "node_modules"
   ],
   "ignore": [],
   "ext": "js,pug,json",

@@ -15,7 +15,7 @@ module.exports = function(app) {
 		return condition;
 	}
 
-	app.get('/api/rooms', checkLoggedIn, async (req, res) => {
+	app.get('/api/rooms', checkLoggedIn(), async (req, res) => {
 		const params = validate(req, {
 			offset: {
 				type: 'number',
@@ -49,7 +49,7 @@ module.exports = function(app) {
 		res.json({rooms, total});
 	});
 
-	app.get('/api/rooms/:_id', checkLoggedIn, async (req, res) => {
+	app.get('/api/rooms/:_id', checkLoggedIn(), async (req, res) => {
 		if (!req.signedCookies.name) {
 			res.status(404);
 		}
@@ -73,7 +73,7 @@ module.exports = function(app) {
 		res.json({...room});
 	});
 
-	app.post('/api/rooms', checkLoggedIn, async (req, res) => {
+	app.post('/api/rooms', checkLoggedIn(), async (req, res) => {
 		const params = validate(req, {
 			name: {
 				type: 'string',

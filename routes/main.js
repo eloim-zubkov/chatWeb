@@ -5,11 +5,7 @@ module.exports = function(app) {
 		res.render('app');
 	});
 
-	app.get('*', ensureSignedIn, (req, res) => {
-		if (req.signedCookies.name) {
-			res.render('app');
-		} else {
-			res.redirect('/signin');
-		}
+	app.get('*', ensureSignedIn(), (req, res) => {
+		res.redirect('/signin');
 	});
 };

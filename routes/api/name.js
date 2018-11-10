@@ -1,3 +1,4 @@
+const checkLoggedIn = require('../../middlewares/checkLoggedIn');
 const validate = require('../../utils/validate');
 
 module.exports = (app) => {
@@ -13,12 +14,12 @@ module.exports = (app) => {
 				minLength: 3
 			}
 		});
-
 		res.cookie('name', params.name, {signed: true});
 		res.send(req.signedCookies.name);
+
 	});
 
-	app.delete('/api/name', checkLoggedIn, (req, res) => {
+	app.delete('/api/name', checkLoggedIn(), (req, res) => {
 		res.clearCookie('name');
 		res.sendStatus(200);
 	});
