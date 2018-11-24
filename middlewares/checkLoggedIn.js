@@ -6,5 +6,5 @@ module.exports = () => (req, res, next) => {
 		return next();
 	}
 
-	throw new errors.AccessDeniedError();
+	throw new errors.UnauthorizedError();
 };

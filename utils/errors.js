@@ -9,17 +9,17 @@ class NotFoundError extends Error {
 	}
 }
 
-class AccessDeniedError extends Error {
+class UnauthorizedError extends Error {
 	constructor(...args) {
 		super(...args);
 
-		this.name = 'AccessDeniedError';
+		this.name = 'UnauthorizedError';
 		this.message = 'You have no access';
 		this.userMessage = 'Доступ запрещен';
-		this.statusCode = 403;
+		this.statusCode = 401;
 	}
 }
 
 exports.NotFoundError = NotFoundError;
 
-exports.AccessDeniedError = AccessDeniedError;
+exports.UnauthorizedError = UnauthorizedError;
