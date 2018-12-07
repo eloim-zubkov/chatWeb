@@ -1,18 +1,25 @@
 const React = require('react');
 const axios = require('axios');
 const {withFormik} = require('formik');
-const {Box, Button, Form, FormField, Layer, TextInput} = require('grommet');
 const yup = require('yup');
 const PropTypes = require('prop-types');
+const {Box, Button, Form, FormField, Layer, TextInput} = require('grommet');
 
 function Signin({handleChange, handleSubmit, isSubmitting, errors}) {
 	return (
 		<Layer>
-			<Box align="center">
+			<Box align="center" padding="small">
 				<Form onSubmit={handleSubmit}>
-					<FormField label="Ваш ник" error={errors.text}>
+					{errors.auth && <div>{errors.auth}</div>}
+					<FormField label="Ваш ник" error={errors.name}>
 						<TextInput
 							name="name"
+							onDOMChange={handleChange}
+						/>
+					</FormField>
+					<FormField label="Пароль" error={errors.password}>
+						<TextInput
+							name="password"
 							onDOMChange={handleChange}
 						/>
 					</FormField>
@@ -45,13 +52,22 @@ module.exports = withFormik({
 			.string()
 			.required()
 			.min(3)
+			.max(20),
+		password: yup
+			.string()
+			.required()
+			.min(3)
 			.max(20)
 	}),
 
-	handleSubmit: ({name}, {props, setSubmitting}) => {
-		axios.patch('/api/name', {name}).then(() => {
+	handleSubmit: ({name, password}, {props, setSubmitting, setFieldError}) => {
+		axios.patch('/api/name', {name, password}).then(() => {
 			props.router.push('/');
-		}).catch(() => {
+		}).catch(({response}) => {
+			if (response.data.message === 'Wrong password') {
+				setFieldError('auth', 'Неверный логин/пароль');
+			}
+
 			setSubmitting(false);
 		});
 	}

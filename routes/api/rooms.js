@@ -3,17 +3,17 @@ const validate = require('../../utils/validate');
 const db = require('../../db');
 const checkLoggedIn = require('../../middlewares/checkLoggedIn');
 
-module.exports = function(app) {
-	function makeGetListCondition(params) {
-		const condition = {};
+function makeGetListCondition(params) {
+	const condition = {};
 
-		if (params.textQuery){
-			condition.name = new RegExp(params.textQuery, 'i');
-		}
-
-		return condition;
+	if (params.textQuery){
+		condition.name = new RegExp(params.textQuery, 'i');
 	}
 
+	return condition;
+}
+
+module.exports = (app) => {
 	app.get('/api/rooms', checkLoggedIn(), async (req, res) => {
 		const params = validate(req, {
 			offset: {

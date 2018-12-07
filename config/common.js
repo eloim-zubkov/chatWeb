@@ -1,6 +1,4 @@
 const mongodbUri = require('mongodb-uri');
-const os = require('os');
-const path = require('path');
 const {configBuilder} = require('./index');
 
 configBuilder.register({
