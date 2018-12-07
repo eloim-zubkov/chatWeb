@@ -1,6 +1,6 @@
-const React = require('react');
 const _ = require('underscore');
 const axios = require('axios');
+const React = require('react');
 const {List, ListItem, Search} = require('grommet');
 const Room = require('./Room');
 
@@ -8,41 +8,34 @@ module.exports = class Rooms extends React.Component {
 	state = {rooms: [], total: 0, textQuery: '', isSubmiting: false};
 
 	componentDidMount() {
-		this.getRooms();
+		this.fetchRooms({}, {replace: true});
 	}
 
-	onSearchChange = (event) => {
-		const textQuery = event.target.value;
+	onSearchChange = ({target}) => {
+		const textQuery = target.value;
+
 		this.setState({textQuery});
-		this.getPosts({textQuery});
+		this.fetchRooms({textQuery}, {replace: true});
 	}
 
 	onMore = () => {
-		this.addRooms({offset: this.state.rooms.length});
+		this.fetchRooms({offset: this.state.rooms.length});
 	}
 
-	getRooms(...args) {
-		this.requestRooms(...args).then(({rooms, total}) => {
-			this.setState({
-				rooms: rooms || [],
-				total
-			});
-		});
-	}
-
-	addRooms(...args) {
+	fetchRooms(params, {replace} = {}) {
 		if (this.state.isSubmiting) {
 			return;
 		}
+
 		this.setState({isSubmiting: true});
-		this.requestRooms(...args)
-			.then(({rooms, total}) => {
-				this.setState({
-					rooms: this.state.rooms.concat(rooms),
-					total
-				});
-				this.setState({isSubmiting: false});
-			});
+
+		this.requestRooms(params).then((data) => {
+			this.setState(({rooms}) => ({
+				rooms: replace ? data.rooms || [] : rooms.concat(data.rooms),
+				total: data.total,
+				isSubmiting: false
+			}));
+		});
 	}
 
 	requestRooms(params) {
@@ -50,33 +43,31 @@ module.exports = class Rooms extends React.Component {
 	}
 
 	render() {
-		if (this.state.isSubmiting) {
-			return (
-				<h3>Загрузка...</h3>
-			);
-		}
-
-		const roomsElements = _(this.state.rooms).map((room) => (
-			<ListItem key={room._id} justify="center" separator="none">
-				<Room
-					room={room}
-				/>
-			</ListItem>
-		));
 		return (
 			<React.Fragment>
 				<Search
 					placeHolder="Search"
+					value={this.state.textQuery}
 					inline
 					responsive={false}
 					name="textQuery"
 					onDOMChange={this.onSearchChange}
 				/>
-				<List
-					onMore={this.state.rooms.length !== this.state.total ? this.onMore : null}
-				>
-					{roomsElements}
-				</List>
+				{this.state.isSubmiting ? (
+					<h3>Загрузка...</h3>
+				) : (
+					<List
+						onMore={this.state.rooms.length !== this.state.total ? this.onMore : null}
+					>
+						{_(this.state.rooms).map((room) => (
+							<ListItem key={room._id} justify="center" separator="none">
+								<Room
+									room={room}
+								/>
+							</ListItem>
+						))}
+					</List>
+				)}
 			</React.Fragment>
 		);
 	}

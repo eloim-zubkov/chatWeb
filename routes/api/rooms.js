@@ -1,5 +1,4 @@
 const _ = require('underscore');
-const moment = require('moment');
 const validate = require('../../utils/validate');
 const db = require('../../db');
 const checkLoggedIn = require('../../middlewares/checkLoggedIn');
@@ -9,7 +8,7 @@ module.exports = function(app) {
 		const condition = {};
 
 		if (params.textQuery){
-			condition.text = new RegExp(params.textQuery, 'i');
+			condition.name = new RegExp(params.textQuery, 'i');
 		}
 
 		return condition;
@@ -19,12 +18,12 @@ module.exports = function(app) {
 		const params = validate(req, {
 			offset: {
 				type: 'number',
-				'default': 0,
+				default: 0,
 				minimum: 0
 			},
 			limit: {
 				type: 'number',
-				'default' : 20,
+				default: 20,
 				minimum: 1,
 				maximum: 100
 			},
@@ -37,12 +36,12 @@ module.exports = function(app) {
 
 		const condition = makeGetListCondition(params);
 
-		const [rooms, total] = await Promise.all([db.rooms
-			.find(condition, {_id: 1, name: 1, isPassword: 1})
-			.limit(params.limit)
-			.skip(params.offset)
-			.toArray(),
-
+		const [rooms, total] = await Promise.all([
+			db.rooms
+				.find(condition, {_id: 1, name: 1, isPassword: 1})
+				.limit(params.limit)
+				.skip(params.offset)
+				.toArray(),
 			db.rooms.count(condition)
 		]);
 
@@ -93,7 +92,6 @@ module.exports = function(app) {
 		}
 
 		params.isPassword = params.password !== undefined;
-		params.updateDate = moment().unix();
 
 		await db.rooms.insertOne(params);
 

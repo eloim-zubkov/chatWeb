@@ -14,9 +14,9 @@ module.exports = (app) => {
 				minLength: 3
 			}
 		});
+
 		res.cookie('name', params.name, {signed: true});
 		res.send(req.signedCookies.name);
-
 	});
 
 	app.delete('/api/name', checkLoggedIn(), (req, res) => {

@@ -1,5 +1,4 @@
 const React = require('react');
-const _ = require('underscore');
 const axios = require('axios');
 const {withFormik} = require('formik');
 const {Box, Button, Form, FormField, Layer, TextInput} = require('grommet');
@@ -8,7 +7,7 @@ const PropTypes = require('prop-types');
 
 function Signin({handleChange, handleSubmit, isSubmitting, errors}) {
 	return (
-		<Layer >
+		<Layer>
 			<Box align="center">
 				<Form onSubmit={handleSubmit}>
 					<FormField label="Ваш ник" error={errors.text}>

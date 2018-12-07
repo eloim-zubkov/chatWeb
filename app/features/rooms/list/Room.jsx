@@ -1,5 +1,5 @@
 const React = require('react');
-const {Image, Box, Label, Button, AddIcon} = require('grommet');
+const {AddIcon, Box, Label, Button} = require('grommet');
 const PropTypes = require('prop-types');
 
 function Room({room}) {
