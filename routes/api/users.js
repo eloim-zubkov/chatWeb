@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const _ = require('underscore');
 const config = require('../../config')();
 const db = require('../../db');
 const checkLoggedIn = require('../../middlewares/checkLoggedIn');
@@ -13,13 +14,31 @@ function makeGetListCondition(params) {
 
 	return condition;
 }
+const path = '/api/users';
 
 module.exports = (app) => {
-	app.get('/api/name', (req, res) => {
-		res.status(200).send(req.signedCookies.name);
+	app.post(path, async (req, res) => {
+		const {name, password} = validate(req, {
+			name: {
+				type: 'string',
+				required: true,
+				minLength: 3
+			},
+			password: {
+				type: 'string'
+			}
+		});
+
+		const hash = crypto.createHmac('sha256', config.secret)
+			.update(password)
+			.digest('hex');
+
+		await db.users.insertOne({name, password: hash, group: 'users'});
+
+		res.sendStatus(200);
 	});
 
-	app.patch('/api/name', async (req, res) => {
+	app.patch(path, async (req, res) => {
 		const params = validate(req, {
 			name: {
 				type: 'string',
@@ -37,16 +56,19 @@ module.exports = (app) => {
 			.digest('hex');
 
 		if (hash === user.password) {
-			res.cookie('name', params.name, {signed: true});
-			res.send(req.signedCookies.name);
+			req.session.auth = true;
+			req.session.user = _(user).pick('name', 'group');
+			res.sendStatus(200);
 			return;
 		}
 
 		throw new Error('Wrong password');
 	});
 
-	app.delete('/api/name', checkLoggedIn(), (req, res) => {
-		res.clearCookie('name');
+	app.delete(path, checkLoggedIn(), (req, res) => {
+		delete req.session.auth;
+		delete req.session.user;
+
 		res.sendStatus(200);
 	});
 };

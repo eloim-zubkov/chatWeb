@@ -1,7 +1,7 @@
 const errors = require('../utils/errors');
 
 module.exports = () => (req, res, next) => {
-	if (req.signedCookies.name) {
+	if (req.session.auth) {
 		return next();
 	}
 

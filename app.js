@@ -1,6 +1,8 @@
 const express = require('express');
 const http = require('http');
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const MongoStore = require('connect-to-mongo')(session);
 const cookieParser = require('cookie-parser');
 const serveStatic = require('serve-static');
 const logger = require('./utils/logger');
@@ -14,6 +16,8 @@ async function init() {
 
 	require('./utils/express/async')(app);
 
+	await require('./db').init();
+
 	app.set('views', './views');
 	app.set('view engine', 'pug');
 	app.locals = require('./views/helpers');
@@ -26,8 +30,18 @@ async function init() {
 		maxAge: null
 	}));
 
+	app.use(session({
+		secret: config.authSecret,
+		store: new MongoStore({
+			collection: 'authSessions',
+			...config.mongodb
+		}),
+		resave: false,
+		saveUninitialized: false
+	}));
+
 	app.use('/static', serveStatic('./static'));
-	await require('./db').init();
+
 	require('./routes')(app);
 
 	server.listen(config.listen.port);

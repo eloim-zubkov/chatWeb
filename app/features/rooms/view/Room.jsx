@@ -1,23 +1,23 @@
 const React = require('react');
 const _ = require('underscore');
 const io = require('socket.io-client');
+const yup = require('yup');
 const {List} = require('grommet');
+const {withFormik} = require('formik');
 const config = require('../../../../config')();
 
 class Room extends React.Component {
-	staet = {
+	state = {
 		messages: []
-	}
+	};
 
 	componentDidMount() {
 		const socket = io(config.listen.host);
 
 		socket.on('message', (username, message) => {
-			this.setState(({messages, ...state}) => {
-				messages.push({username, message});
-
-				return {messages, ...state};
-			});
+			this.setState(
+				({messages}) => messages.push({username, message})
+			);
 		});
 	}
 
@@ -27,9 +27,7 @@ class Room extends React.Component {
 				<List>
 					{_(this.state.messages).map(({message, username}, index) => (
 						<div key={index}>
-							{message}
-							{' - '}
-							{username}
+							{`'${message}' от ${username}`}
 						</div>
 					))}
 				</List>
@@ -38,4 +36,16 @@ class Room extends React.Component {
 	}
 }
 
-module.exports = Room;
+module.exports = withFormik({
+	validationSchema: yup.object().shape({
+		roomName: yup
+			.string()
+			.required()
+			.min(3)
+			.max(20),
+		password: yup
+			.string()
+			.min(6)
+			.max(20)
+	})
+})(Room);

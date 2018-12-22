@@ -2,7 +2,7 @@ const _ = require('underscore');
 const {MongoClient} = require('mongodb');
 const config = require('../config')();
 
-const collections = ['users', 'rooms'];
+const collections = ['users', 'rooms', 'authSessions', 'messages'];
 
 let initialized = false;
 

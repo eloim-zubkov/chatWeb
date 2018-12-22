@@ -9,6 +9,6 @@ module.exports = (
 	<React.Fragment>
 		<IndexRoute components={RoomList} />
 		<Route components={Form} path="/add" />
-		<Route components={Room} path=":_id" />
+		<Route components={Room} path=":roomId" />
 	</React.Fragment>
 );

@@ -11,6 +11,7 @@ configBuilder.register({
 			port: 3000
 		},
 		env: 'development',
-		secret: 'somesecret'
+		secret: 'somesecret',
+		authSecret: 'authSecret'
 	}
 });

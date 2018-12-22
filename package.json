@@ -8,7 +8,8 @@
     "dev": "export NODE_ENV=development && nrun watch",
     "watch-js": "nodemon app.js",
     "watch-web": "webpack --watch --progress",
-    "watch": "run-p -c -s watch-*"
+    "watch": "run-p -c -s watch-*",
+    "sync": "npm install && npm prune"
   },
   "repository": {
     "type": "git",
@@ -24,9 +25,11 @@
     "axios": "0.18.0",
     "body-parser": "1.18.3",
     "conform": "0.2.16",
+    "connect-to-mongo": "^0.2.1",
     "cookie-parser": "1.4.3",
     "deep-conf": "0.1.6",
     "express": "4.16.4",
+    "express-session": "^1.15.6",
     "formik": "0.11.11",
     "grommet": "1.10.1",
     "moment": "2.22.1",

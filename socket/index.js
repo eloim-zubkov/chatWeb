@@ -5,10 +5,8 @@ module.exports = function(app) {
 	const io = require('socket.io')(app);
 
 	io.on('connection', (socket) => {
-		socket.on('init', async (username, room, password) => {
-			room = parseInt(room, 10);
-
-			const roomDb = await db.rooms.findOne({_id: room});
+		socket.on('init', async (username, roomId, password) => {
+			const roomDb = await db.rooms.findOne({_id: roomId});
 
 			if (!roomDb.password || roomDb.password === password) {
 				socket.username = username;
@@ -19,6 +17,7 @@ module.exports = function(app) {
 				socket.broadcast.to(roomDb._id).emit(
 					'message', 'SERVER', socket.username + ' присоединился'
 				);
+
 				await db.rooms.updateOne(
 					{_id: roomDb._id},
 					{$set: {updateDate: moment().unix()}}
@@ -28,7 +27,12 @@ module.exports = function(app) {
 			}
 		});
 
-		socket.on('message', (message) => {
+		socket.on('message', async (message) => {
+			await db.messages.insertOne({
+				message,
+				user: socket.username,
+				room: socket.room
+			});
 			socket.broadcast.to(socket.room).emit('message', socket.username, message);
 		});
 

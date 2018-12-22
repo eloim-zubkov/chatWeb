@@ -1,11 +1,12 @@
 const React = require('react');
 const {withFormik} = require('formik');
 const axios = require('axios');
-const {Box, Button, Form, FormField, TextInput} = require('grommet');
+const {Box, Button, Form, FormField, TextInput, PasswordInput} =
+	require('grommet');
 const yup = require('yup');
 const PropTypes = require('prop-types');
 
-function Room({errors, isSubmitting, handleChange, handleSubmit}) {
+function RoomForm({errors, isSubmitting, handleChange, handleSubmit}) {
 	return (
 		<Box align="center">
 			<Form onSubmit={handleSubmit}>
@@ -16,9 +17,9 @@ function Room({errors, isSubmitting, handleChange, handleSubmit}) {
 					/>
 				</FormField>
 				<FormField label="Пароль" error={errors.text}>
-					<TextInput
+					<PasswordInput
 						name="password"
-						onDOMChange={handleChange}
+						onChange={handleChange}
 					/>
 				</FormField>
 				<Box
@@ -40,7 +41,7 @@ function Room({errors, isSubmitting, handleChange, handleSubmit}) {
 	);
 }
 
-Room.propTypes = {
+RoomForm.propTypes = {
 	isSubmitting: PropTypes.bool.isRequired,
 	handleSubmit: PropTypes.func.isRequired,
 	handleChange: PropTypes.func.isRequired,
@@ -65,4 +66,4 @@ module.exports = withFormik({
 			setSubmitting(false);
 		});
 	}
-})(Room);
+})(RoomForm);
