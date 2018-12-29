@@ -17,9 +17,9 @@ module.exports = withFormik({
 			.max(20)
 	}),
 
-	handleSubmit: ({name, password}, {props, setSubmitting}) => {
-		axios.post('/api/users', {name, password}).then(() => {
-			props.router.push('/signin');
+	handleSubmit: (values, {props, setSubmitting}) => {
+		axios.post('/api/users', values).then(() => {
+			props.router.push('/');
 		}).catch((err) => {
 			setSubmitting(false);
 			throw err;

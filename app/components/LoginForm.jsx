@@ -8,7 +8,7 @@ function LoginForm({
 }) {
 	return (
 		<Layer>
-			<Box align="center" padding="small">
+			<Box align="center" padding="medium">
 				<Form onSubmit={handleSubmit}>
 					{errors.auth && <div>{errors.auth}</div>}
 					<FormField label="Ваш ник" error={errors.name}>
