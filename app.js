@@ -44,7 +44,7 @@ async function init() {
 
 	require('./routes')(app);
 
-	server.listen(config.listen.port);
+	server.listen(config.listen);
 	require('./socket')(server);
 	logger(`Server started on ${config.listen.host}:${config.listen.port}`);
 

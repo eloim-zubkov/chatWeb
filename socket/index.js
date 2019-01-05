@@ -1,7 +1,7 @@
 const moment = require('moment');
 const db = require('../db');
 
-module.exports = function(app) {
+module.exports = (app) => {
 	const io = require('socket.io')(app);
 
 	io.on('connection', (socket) => {

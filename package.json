@@ -36,6 +36,7 @@
     "mongodb": "2.2.26",
     "mongodb-uri": "0.9.7",
     "mongodbext": "^2.2.1",
+    "mongodbext-relations": "^1.0.9",
     "normalizr": "3.2.4",
     "prop-types": "15.6.2",
     "pug": "2.0.3",

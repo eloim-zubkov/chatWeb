@@ -3,7 +3,9 @@ const _ = require('underscore');
 const config = require('../../config')();
 const db = require('../../db');
 const checkLoggedIn = require('../../middlewares/checkLoggedIn');
+const checkAdminRights = require('../../middlewares/checkAdminRights');
 const validate = require('../../utils/validate');
+const errors = require('../../utils/errors');
 
 function makeGetListCondition(params) {
 	const condition = {};
@@ -55,15 +57,41 @@ module.exports = (app) => {
 			.update(params.password)
 			.digest('hex');
 
-		if (hash === user.password) {
-			req.session.auth = true;
-			req.session.user = _(user).pick('name', 'group');
-			res.sendStatus(200);
-			return;
+		if (hash !== user.password) {
+			throw new Error('Wrong password');
 		}
 
-		throw new Error('Wrong password');
+		req.session.auth = true;
+		req.session.user = _(user).pick('name', 'group', '_id');
+		res.sendStatus(200);
 	});
+
+	app.put(
+		`${path}/changeGroup`,
+		checkLoggedIn(),
+		checkAdminRights(),
+		async (req, res) => {
+			const {_id, group} = validate(req, {
+				id: {
+					type: 'number',
+					required: true
+				},
+				group: {
+					type: 'string',
+					required: true
+				}
+			});
+
+			const user = await db.users.findOne({_id});
+
+			if (!user) {
+				throw new errors.NotFoundError();
+			}
+
+			await db.users.updateOne({_id}, {$set: {group}});
+			res.sendStatus(200);
+		}
+	);
 
 	app.delete(path, checkLoggedIn(), (req, res) => {
 		delete req.session.auth;

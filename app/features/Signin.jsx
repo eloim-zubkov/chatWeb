@@ -18,16 +18,16 @@ const LoginForm = withFormik({
 	}),
 
 	handleSubmit: ({name, password}, {props, setSubmitting, setFieldError}) => {
-		axios.patch('/api/users', {name, password}).then(() => {
-			props.router.push('/');
-		}).catch(({response}) => {
-			if (response.data.message === 'Wrong password') {
-				setFieldError('auth', 'Неверный логин/пароль');
-			}
-
-			setSubmitting(false);
-		});
+		axios.patch('/api/users', {name, password})
+			.then(() => props.router.push('/'))
+			.catch((error) => {
+				setSubmitting(false);
+				const {response} = error;
+				if (response && response.data.message === 'Wrong password') {
+					setFieldError('auth', 'Неверный логин/пароль');
+				}
+			});
 	}
 })(require('app/components/LoginForm'));
 
-module.exports = (...props) => <LoginForm withSignUp {...props} />;
+module.exports = (props) => <LoginForm withSignUp {...props} />;
