@@ -1,4 +1,5 @@
 const moment = require('moment');
+const logger = require('../utils/logger');
 const db = require('../db');
 
 module.exports = (app) => {
@@ -43,4 +44,6 @@ module.exports = (app) => {
 			socket.leave(socket.room);
 		});
 	});
+
+	logger('Sockets connected successfully');
 };

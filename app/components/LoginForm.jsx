@@ -1,14 +1,19 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Box, Button, Form, FormField, Layer, TextInput, PasswordInput} =
-	require('grommet');
+const {
+	Article, Box, Button, Form, FormField, Header,
+	Heading, Layer, TextInput, PasswordInput
+} = require('grommet');
 
 function LoginForm({
-	handleChange, handleSubmit, isSubmitting, errors, withSignUp
+	handleChange, handleSubmit, isSubmitting, errors, header, withSignUp
 }) {
 	return (
 		<Layer>
-			<Box align="center" padding="medium">
+			<Article align="center" pad="medium">
+				<Header>
+					<Heading tag="h3">{header}</Heading>
+				</Header>
 				<Form onSubmit={handleSubmit}>
 					{errors.auth && <div>{errors.auth}</div>}
 					<FormField label="Ваш ник" error={errors.name}>
@@ -40,7 +45,7 @@ function LoginForm({
 						)}
 					</Box>
 				</Form>
-			</Box>
+			</Article>
 		</Layer>
 	);
 }
@@ -50,6 +55,7 @@ LoginForm.propTypes = {
 	handleSubmit: PropTypes.func.isRequired,
 	handleChange: PropTypes.func.isRequired,
 	errors: PropTypes.any.isRequired,
+	header: PropTypes.string.isRequired,
 	withSignUp: PropTypes.bool
 };
 

@@ -34,44 +34,37 @@ class Layout extends React.Component {
 			<Article>
 				<Header
 					fixed
-					justify="center"
 					colorIndex="grey-1-a"
 					pad="small"
+					justify="between"
+					direction="row"
 				>
-					<Box
-						justify="between"
-						size="xxlarge"
-						direction="row"
-					>
-						<Heading tag="h2" margin="none">
-							<Anchor
-								label="ws-Chat"
-								path="/"
+					<Heading tag="h2" margin="none">
+						<Anchor
+							label="ws-Chat"
+							path="/"
+						/>
+					</Heading>
+					<Box margin="none" align="center" direction="row">
+						<Box margin={{horizontal: 'small', vertical: 'none'}}>
+							<Button
+								label="Добавить комнату"
+								primary
+								icon={<AddIcon />}
+								path="/add"
 							/>
-						</Heading>
-						<Box margin="none" align="center" direction="row">
-							<Box margin={{horizontal: 'small', vertical: 'none'}}>
-								<Button
-									label="Добавить комнату"
-									primary
-									icon={<AddIcon />}
-									path="/add"
-								/>
-							</Box>
-							{this.state.user && (
-								<Button
-									label="Выйти"
-									primary
-									onClick={this.onExitClick}
-								/>
-							)}
 						</Box>
+						{this.state.user && (
+							<Button
+								label="Выйти"
+								primary
+								onClick={this.onExitClick}
+							/>
+						)}
 					</Box>
 				</Header>
 				<Box margin={{vertical: 'medium'}} align="center">
-					<Box size="xxlarge">
-						{this.props.children}
-					</Box>
+					{this.props.children}
 				</Box>
 			</Article>
 		);

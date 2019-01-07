@@ -12,7 +12,7 @@ class Room extends React.Component {
 	};
 
 	componentDidMount() {
-		const socket = io(config.listen.host);
+		const socket = io(config.listen);
 
 		socket.on('message', (username, message) => {
 			this.setState(
@@ -24,7 +24,7 @@ class Room extends React.Component {
 	render() {
 		return (
 			<React.Fragment>
-				<List>
+				<List full>
 					{_(this.state.messages).map(({message, username}, index) => (
 						<div key={index}>
 							{`'${message}' от ${username}`}

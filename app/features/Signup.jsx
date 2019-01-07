@@ -1,7 +1,17 @@
+const React = require('react');
 const axios = require('axios');
 const {withFormik} = require('formik');
 const yup = require('yup');
 const LoginForm = require('app/components/LoginForm');
+
+function SignupForm({...props}) {
+	return (
+		<LoginForm
+			header="Регистрация в системе"
+			{...props}
+		/>
+	);
+}
 
 module.exports = withFormik({
 	validationSchema: yup.object().shape({
@@ -25,4 +35,4 @@ module.exports = withFormik({
 			throw err;
 		});
 	}
-})(LoginForm);
+})(SignupForm);

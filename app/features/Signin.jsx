@@ -23,6 +23,7 @@ const LoginForm = withFormik({
 			.catch((error) => {
 				setSubmitting(false);
 				const {response} = error;
+
 				if (response && response.data.message === 'Wrong password') {
 					setFieldError('auth', 'Неверный логин/пароль');
 				}
@@ -30,4 +31,10 @@ const LoginForm = withFormik({
 	}
 })(require('app/components/LoginForm'));
 
-module.exports = (props) => <LoginForm withSignUp {...props} />;
+module.exports = (props) => (
+	<LoginForm
+		withSignUp
+		header="Вход в систему"
+		{...props}
+	/>
+);

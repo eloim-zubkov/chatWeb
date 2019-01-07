@@ -1,5 +1,4 @@
 const express = require('express');
-const http = require('http');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoStore = require('connect-to-mongo')(session);
@@ -11,8 +10,6 @@ const _ = require('underscore');
 
 async function init() {
 	const app = express();
-
-	const server = http.Server(app);
 
 	require('./utils/express/async')(app);
 
@@ -44,9 +41,8 @@ async function init() {
 
 	require('./routes')(app);
 
-	server.listen(config.listen);
-	require('./socket')(server);
 	logger(`Server started on ${config.listen.host}:${config.listen.port}`);
+	require('./socket')(app.listen(config.listen));
 
 	app.use((err, req, res, next) => {
 		logger(err);
