@@ -19,6 +19,45 @@ function makeGetListCondition(params) {
 const path = '/api/users';
 
 module.exports = (app) => {
+	app.get(
+		path,
+		checkLoggedIn(),
+		checkAdminRights(),
+		async (req, res) => {
+			const params = validate(req, {
+				offset: {
+					type: 'number',
+					default: 0,
+					minimum: 0
+				},
+				limit: {
+					type: 'number',
+					default: 20,
+					minimum: 1,
+					maximum: 100
+				},
+				textQuery: {
+					type: 'string',
+					minLength: 0,
+					maxLength: 20
+				}
+			});
+
+			const condition = makeGetListCondition(params);
+
+			const [users, total] = await Promise.all([
+				db.users
+					.find(condition, {_id: 1, name: 1, group: 1})
+					.limit(params.limit)
+					.skip(params.offset)
+					.toArray(),
+				db.users.count(condition)
+			]);
+
+			res.json({users, total});
+		}
+	);
+
 	app.post(path, async (req, res) => {
 		const {name, password} = validate(req, {
 			name: {

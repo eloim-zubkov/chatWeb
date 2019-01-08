@@ -7,16 +7,18 @@ module.exports = (app) => {
 
 	io.on('connection', (socket) => {
 		socket.on('init', async (username, roomId, password) => {
-			const roomDb = await db.rooms.findOne({_id: roomId});
+			const roomDb = await db.rooms.findOne({_id: Number(roomId)});
 
 			if (!roomDb.password || roomDb.password === password) {
-				socket.username = username;
+				const user = await db.users.findOne({_id: Number(username)});
+
+				socket.username = user;
 				socket.room = roomDb._id;
 				socket.join(roomDb._id);
-				socket.emit('message', 'SERVER', 'вы подключились к ' + roomDb.name);
+				socket.emit('message', 'SERVER', `Вы подключились к ${roomDb.name}`);
 
 				socket.broadcast.to(roomDb._id).emit(
-					'message', 'SERVER', socket.username + ' присоединился'
+					'message', 'SERVER', socket.username.name + ' присоединился'
 				);
 
 				await db.rooms.updateOne(
@@ -31,10 +33,15 @@ module.exports = (app) => {
 		socket.on('message', async (message) => {
 			await db.messages.insertOne({
 				message,
-				user: socket.username,
+				user: socket.username._id,
 				room: socket.room
 			});
-			socket.broadcast.to(socket.room).emit('message', socket.username, message);
+
+			socket.broadcast.to(socket.room).emit(
+				'message',
+				socket.username.name,
+				message
+			);
 		});
 
 		socket.on('disconnect', () => {

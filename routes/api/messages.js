@@ -5,11 +5,6 @@ const checkLoggedIn = require('../../middlewares/checkLoggedIn');
 module.exports = (app) => {
 	app.get('/api/messages', checkLoggedIn(), async (req, res) => {
 		const params = validate(req, {
-			offset: {
-				type: 'number',
-				default: 0,
-				minimum: 0
-			},
 			limit: {
 				type: 'number',
 				default: 20,
@@ -22,8 +17,7 @@ module.exports = (app) => {
 			}
 		});
 
-
-		const [rooms, total] = await Promise.all([
+		const [messages, total] = await Promise.all([
 			db.messages
 				.find(params, {_id: 1, name: 1, message: 1, room: 1})
 				.limit(params.limit)
@@ -32,6 +26,6 @@ module.exports = (app) => {
 			db.messages.count(params)
 		]);
 
-		res.json({rooms, total});
+		res.json({rooms: messages, total});
 	});
 };

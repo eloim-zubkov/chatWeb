@@ -2,6 +2,8 @@ const _ = require('underscore');
 const validate = require('../../utils/validate');
 const db = require('../../db');
 const checkLoggedIn = require('../../middlewares/checkLoggedIn');
+const checkAdminRights = require('../../middlewares/checkAdminRights');
+const errors = require('../../utils/errors');
 
 function makeGetListCondition(params) {
 	const condition = {};
@@ -49,10 +51,6 @@ module.exports = (app) => {
 	});
 
 	app.get('/api/rooms/:_id', checkLoggedIn(), async (req, res) => {
-		if (!req.signedCookies.name) {
-			res.status(404);
-		}
-
 		const params = validate(req, {
 			_id: {
 				required: true,
@@ -65,9 +63,13 @@ module.exports = (app) => {
 			{_id: params._id},
 			{
 				name: 1,
-				isPassword: 1,
+				withPassword: 1,
 				_id: 1
 			});
+
+		if (!room) {
+			throw new errors.NotFoundError();
+		}
 
 		res.json({...room});
 	});
@@ -91,10 +93,35 @@ module.exports = (app) => {
 			throw new Error('Комната с таким именем уже существует');
 		}
 
-		params.isPassword = params.password !== undefined;
+		params.withPassword = params.password !== undefined;
 
 		await db.rooms.insertOne(params);
 
 		res.json({room: _(room).pick('_id', 'name')});
 	});
+
+	app.delete(
+		'api/rooms/:id',
+		checkLoggedIn(),
+		checkAdminRights(),
+		async (req, res) => {
+			const {_id} = validate(req, {
+				_id: {
+					required: true,
+					type: 'number',
+					minimum: 0
+				}
+			});
+
+			const room = await db.roomd.findOne({_id});
+
+			if (!room) {
+				throw new errors.NotFoundError();
+			}
+
+			await db.rooms.deleteOne({_id});
+
+			res.send(200);
+		}
+	);
 };

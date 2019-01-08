@@ -1,7 +1,7 @@
 const React = require('react');
 const axios = require('axios');
 const {
-	Header, Box, Button, AddIcon, Anchor, Heading, Article
+	Article, Header, Box, Button, AddIcon, Anchor, Heading
 } = require('grommet');
 const PropTypes = require('prop-types');
 const {withRouter} = require('react-router');
@@ -23,7 +23,7 @@ class Layout extends React.Component {
 	}
 
 	onExitClick = () => {
-		axios.delete('api/users').then(() => {
+		axios.delete('/api/users').then(() => {
 			this.setState({user: null});
 			this.props.router.push('/signin');
 		});
@@ -63,9 +63,7 @@ class Layout extends React.Component {
 						)}
 					</Box>
 				</Header>
-				<Box margin={{vertical: 'medium'}} align="center">
-					{this.props.children}
-				</Box>
+				{this.props.children}
 			</Article>
 		);
 	}
