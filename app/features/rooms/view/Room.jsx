@@ -2,13 +2,14 @@ const React = require('react');
 const _ = require('underscore');
 const io = require('socket.io-client');
 const yup = require('yup');
-const {List} = require('grommet');
+const {Box, List, FormField, TextInput} = require('grommet');
 const {withFormik} = require('formik');
 const config = require('../../../../config')();
 
 class Room extends React.Component {
 	state = {
-		messages: []
+		messages: [],
+		text: ''
 	};
 
 	componentDidMount() {
@@ -21,9 +22,13 @@ class Room extends React.Component {
 		});
 	}
 
+	onChange = ({currentTarget}) => {
+		this.setState({text: currentTarget.value});
+	}
+
 	render() {
 		return (
-			<React.Fragment>
+			<Box full>
 				<List full>
 					{_(this.state.messages).map(({message, username}, index) => (
 						<div key={index}>
@@ -31,7 +36,15 @@ class Room extends React.Component {
 						</div>
 					))}
 				</List>
-			</React.Fragment>
+				<FormField>
+					<TextInput
+						id='item1'
+						name='item-1'
+						value={this.state.text}
+						onDOMChange={this.onChange}
+					/>
+				</FormField>
+			</Box>
 		);
 	}
 }
